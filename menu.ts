@@ -1,10 +1,7 @@
 namespace misticoMenu {
 
     /**
-     * Cria um menu inicial completo e funcional
-     * @param titulo Nome do jogo
-     * @param fundo Cor de fundo
-     * @param personagem Sprite decorativo
+     * Menu inicial pronto (Play)
      */
     //% block="criar menu inicial | título %titulo | fundo %fundo | personagem %personagem"
     //% group="Menu"
@@ -14,43 +11,34 @@ namespace misticoMenu {
         personagem: Sprite
     ) {
 
+        // Cria uma cena separada
         game.pushScene()
-
         scene.setBackgroundColor(fundo)
 
-        // Título
-        let titleSprite = textsprite.create(titulo)
-        titleSprite.setMaxFontHeight(16)
-        titleSprite.setPosition(80, 20)
+        // Título do jogo
+        let title = textsprite.create(titulo)
+        title.setMaxFontHeight(16)
+        title.setPosition(80, 20)
 
         // Personagem decorativo
-        personagem.setPosition(80, 70)
+        personagem.setPosition(80, 60)
         personagem.setFlag(SpriteFlag.Ghost, true)
+
+        // Texto PLAY
+        let play = textsprite.create("Play")
+        play.setPosition(80, 100)
 
         // Cursor
         let cursor = textsprite.create("▶")
         cursor.setPosition(45, 100)
 
-        // Opções
-        let playText = textsprite.create("Play")
-        playText.setPosition(80, 100)
-
-        let opcao = 0
-
-        controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
-            opcao = 0
-            cursor.setPosition(45, 100)
-        })
-
-        controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
-            opcao = 0
-            cursor.setPosition(45, 100)
-        })
-
+        // Pressionar A para começar
         controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
-            if (opcao == 0) {
-                game.popScene()
-            }
+            cursor.startEffect(effects.confetti, 200)
+
+            timer.after(150, function () {
+                game.popScene() // sai do menu e inicia o jogo
+            })
         })
     }
 }
