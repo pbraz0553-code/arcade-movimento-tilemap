@@ -1,17 +1,12 @@
 {
   "name": "mistico-engine",
   "version": "1.0.0",
-  "description": "Mistico Engine - Movimento, menu, grid, colisão, animação e fake 3D para MakeCode Arcade",
+  "description": "Mistico Engine - Movimento, menu e sistemas para MakeCode Arcade",
   "dependencies": {
     "device": "*"
   },
   "files": [
     "main.ts",
-    "movement.ts",
-    "grid.ts",
-    "collision.ts",
-    "animation.ts",
-    "fake3d.ts",
     "menu.ts"
   ],
   "public": true,
