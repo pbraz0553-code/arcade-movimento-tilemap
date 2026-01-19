@@ -1,50 +1,110 @@
-namespace movimentoTilemap {
+//% color=#6A0DAD icon="\uf11b" block="Mistico Engine"
+namespace misticoEngine {
+
+    let podeMover = true
+    let velocidadeNormal = 100
+    let velocidadeDash = 180
 
     /**
-     * Ativa movimento do jogador com controle
-     * @param jogador sprite do jogador
-     * @param velocidade velocidade do movimento
+     * Movimento livre com controle
      */
-    //% block="ativar movimento do jogador $jogador velocidade $velocidade"
-    //% velocidade.defl=100
+    //% block="ativar movimento livre do jogador $jogador"
     //% group="Movimento"
-    export function ativarMovimento(jogador: Sprite, velocidade: number) {
-        controller.moveSprite(jogador, velocidade, velocidade)
+    export function movimentoLivre(jogador: Sprite) {
+        controller.moveSprite(jogador, velocidadeNormal, velocidadeNormal)
         jogador.setFlag(SpriteFlag.StayInScreen, true)
     }
 
     /**
-     * Para totalmente o jogador
-     * @param jogador sprite do jogador
+     * Movimento por GRID estilo Pokémon
      */
-    //% block="parar movimento do jogador $jogador"
+    //% block="ativar movimento por grid $jogador"
     //% group="Movimento"
-    export function pararMovimento(jogador: Sprite) {
-        jogador.vx = 0
-        jogador.vy = 0
+    export function movimentoGrid(jogador: Sprite) {
+        controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
+            moverGrid(jogador, 0, -16)
+        })
+        controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
+            moverGrid(jogador, 0, 16)
+        })
+        controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
+            moverGrid(jogador, -16, 0)
+        })
+        controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
+            moverGrid(jogador, 16, 0)
+        })
     }
 
-    /**
-     * Ativa colisão do jogador com paredes do tilemap
-     * @param jogador sprite do jogador
-     */
-    //% block="ativar colisão com tilemap para $jogador"
-    //% group="Colisão"
-    export function ativarColisao(jogador: Sprite) {
-        scene.onHitWall(SpriteKind.Player, function (sprite, location) {
-            sprite.vx = 0
-            sprite.vy = 0
+    function moverGrid(jogador: Sprite, dx: number, dy: number) {
+        if (!podeMover) return
+        podeMover = false
+        jogador.x += dx
+        jogador.y += dy
+        timer.after(150, function () {
+            podeMover = true
         })
     }
 
     /**
-     * Centraliza o jogador em tiles (movimento mais preciso)
-     * @param jogador sprite do jogador
+     * Animação automática andando
      */
-    //% block="centralizar jogador no tile $jogador"
-    //% group="Tilemap"
-    export function centralizarNoTile(jogador: Sprite) {
-        jogador.x = Math.round(jogador.x / 16) * 16
-        jogador.y = Math.round(jogador.y / 16) * 16
+    //% block="ativar animação andando $jogador imagens $frames intervalo $tempo"
+    //% group="Animação"
+    export function animacaoAndar(jogador: Sprite, frames: Image[], tempo: number) {
+        animation.runImageAnimation(
+            jogador,
+            frames,
+            tempo,
+            true
+        )
+    }
+
+    /**
+     * Colisão com tile específico
+     */
+    //% block="quando $jogador tocar no tile $tile executar"
+    //% group="Colisão"
+    export function colisaoPorTile(jogador: Sprite, tile: Image, acao: () => void) {
+        scene.onOverlapTile(SpriteKind.Player, tile, function () {
+            acao()
+        })
+    }
+
+    /**
+     * Dash / correr
+     */
+    //% block="ativar dash para $jogador"
+    //% group="Movimento"
+    export function dash(jogador: Sprite) {
+        controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
+            controller.moveSprite(jogador, velocidadeDash, velocidadeDash)
+        })
+        controller.A.onEvent(ControllerButtonEvent.Released, function () {
+            controller.moveSprite(jogador, velocidadeNormal, velocidadeNormal)
+        })
+    }
+
+    /**
+     * Profundidade (fake 3D)
+     */
+    //% block="ativar profundidade 3D falsa para $jogador"
+    //% group="Visual"
+    export function profundidadeFake3D(jogador: Sprite) {
+        game.onUpdate(function () {
+            jogador.z = jogador.y
+        })
+    }
+
+    /**
+     * Criar menu inicial de jogo
+     */
+    //% block="criar menu inicial título $titulo"
+    //% group="Menu"
+    export function menuInicial(titulo: string) {
+        scene.setBackgroundColor(9)
+        game.splash(titulo, "Pressione A para começar")
+        controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
+            game.reset()
+        })
     }
 }
