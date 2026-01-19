@@ -1,6 +1,6 @@
 {
   "name": "movimento-tilemap",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Extensão MakeCode Arcade para movimento de personagem com tilemap",
   "dependencies": {
     "device": "*"
@@ -8,6 +8,5 @@
   "files": [
     "main.ts"
   ],
-  "testFiles": [],
   "public": true
 }
