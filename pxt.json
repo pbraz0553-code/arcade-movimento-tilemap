@@ -1,7 +1,7 @@
 {
-  "name": "movimento-tilemap",
-  "version": "0.0.2",
-  "description": "Extensão MakeCode Arcade para movimento de personagem com tilemap",
+  "name": "mistico-engine",
+  "version": "1.0.0",
+  "description": "Mistico Engine - Extensão profissional MakeCode Arcade com grid, animação, dash, colisão e menu",
   "dependencies": {
     "device": "*"
   },
